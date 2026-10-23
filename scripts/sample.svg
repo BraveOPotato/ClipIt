@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <radialGradient id="sky" cx="65%" cy="40%" r="80%"><stop stop-color="#45415d"/><stop offset=".6" stop-color="#272a3c"/><stop offset="1" stop-color="#151c2b"/></radialGradient>
+    <radialGradient id="planet" cx="32%" cy="25%" r="75%"><stop stop-color="#f6ddbe"/><stop offset=".45" stop-color="#d8a69c"/><stop offset=".8" stop-color="#946e8d"/><stop offset="1" stop-color="#4a435e"/></radialGradient>
+    <linearGradient id="ring"><stop stop-color="#8093a7"/><stop offset=".5" stop-color="#ead3c2"/><stop offset="1" stop-color="#a09abb"/></linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky)"/>
+  <g fill="#d8d5e3" opacity=".5"><circle cx="97" cy="115" r="1.4"/><circle cx="345" cy="163" r="1"/><circle cx="620" cy="72" r="1"/><circle cx="1097" cy="143" r="1.8"/><circle cx="1190" cy="425" r="1"/><circle cx="917" cy="617" r="1.5"/><circle cx="734" cy="572" r="1"/><circle cx="408" cy="507" r="1.5"/><circle cx="176" cy="421" r="1"/><circle cx="1030" cy="360" r="1.2"/><circle cx="522" cy="308" r="1"/><circle cx="289" cy="619" r="1"/></g>
+  <g transform="rotate(-23 828 331)"><ellipse cx="828" cy="331" rx="297" ry="89" fill="none" stroke="url(#ring)" stroke-width="2"/><ellipse cx="828" cy="331" rx="315" ry="100" fill="none" stroke="#9a8aa7" stroke-width=".8" opacity=".45"/></g>
+  <circle cx="828" cy="331" r="162" fill="url(#planet)"/>
+  <path d="M554 447 C654 472 1030 297 1103 215" fill="none" stroke="url(#ring)" stroke-width="4" opacity=".85"/>
+  <circle cx="1099" cy="222" r="9" fill="#dbc6b5"/>
+  <text x="94" y="323" font-family="DejaVu Sans" font-weight="bold" font-size="82" letter-spacing="10" fill="#eee7e3">ORBIT</text>
+  <text x="99" y="363" font-family="DejaVu Sans" font-size="14" letter-spacing="5" fill="#acadb9">A STUDY IN MOTION</text>
+  <path d="M100 401H168" stroke="#bc9caa" stroke-width="2"/>
+  <text x="99" y="642" font-family="DejaVu Sans" font-size="11" letter-spacing="2" fill="#8c909f">CLIPIT ORIGINAL / 12 SECONDS</text>
+  <text x="1110" y="642" font-family="DejaVu Sans" font-size="11" letter-spacing="2" fill="#8c909f">01 / 01</text>
+</svg>

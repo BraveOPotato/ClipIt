@@ -1,0 +1,1245 @@
+{
+ "url": "http://localhost:5173",
+ "at": "2026-10-23T18:17:38.131Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.89,
+    0.84
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 976,
+     "screens": 1.1,
+     "words": 212,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 38,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "chars": 20,
+     "lines": 1,
+     "size": 29,
+     "vw": 2,
+     "font": "DM Sans",
+     "weight": 550,
+     "tracking": -0.034,
+     "leading": 1.2,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.18,
+     "top": 242,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "lines": 1,
+     "size": 29,
+     "font": "DM Sans"
+    },
+    "headings": [
+     {
+      "text": "clip it browser edition",
+      "words": 4,
+      "chars": 23,
+      "lines": 1,
+      "size": 28,
+      "vw": 1.9,
+      "font": "DM Sans",
+      "weight": 700,
+      "tracking": -0.054,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.15,
+      "top": 19,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Just the good parts.",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 29,
+      "vw": 2,
+      "font": "DM Sans",
+      "weight": 550,
+      "tracking": -0.034,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 242,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "DM Sans",
+       "share": 0.91,
+       "mono": false
+      },
+      {
+       "family": "IBM Plex Mono",
+       "share": 0.09,
+       "mono": true
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      16,
+      22,
+      28,
+      29
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "DM Sans",
+      "size": 12,
+      "leading": 1.8,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 6.5
+     },
+     "measureChars": 43,
+     "max": {
+      "size": 29,
+      "vw": 2,
+      "font": "DM Sans",
+      "text": "Just the good parts."
+     },
+     "monoShare": 0.09,
+     "monoProseShare": 0.09,
+     "monoFamilies": [
+      "IBM Plex Mono"
+     ],
+     "monoSamples": [
+      "00:00:00.000",
+      "/ 00:00:00.000",
+      "00:00",
+      "00:07",
+      "00:15",
+      "00:22"
+     ],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.38,
+     "smallText": 31
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#14151b",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.15,
+      "l": 0.09
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#0e0f14",
+       "top": 134,
+       "hsl": {
+        "h": 230,
+        "s": 0.18,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#9794a8",
+       "share": 0.09
+      },
+      {
+       "color": "#847a95",
+       "share": 0.07
+      },
+      {
+       "color": "#817c91",
+       "share": 0.04
+      },
+      {
+       "color": "#8e839b",
+       "share": 0.04
+      },
+      {
+       "color": "#777182",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#282932",
+      "hsl": {
+       "h": 234,
+       "s": 0.11,
+       "l": 0.18
+      },
+      "fg": "#e8e7ef"
+     },
+     "lowContrast": [
+      {
+       "text": "Export video",
+       "ratio": 2.7,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#c3b1d5",
+       "bg": "#75638e"
+      },
+      {
+       "text": "ClipIt v0.1",
+       "ratio": 3.2,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#6f627c",
+       "bg": "#14151b"
+      },
+      {
+       "text": "MP4MOVMKVWEBM+ audio",
+       "ratio": 3.8,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#706d80",
+       "bg": "#0e0f14"
+      },
+      {
+       "text": "/ 00:00:00.000",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 10,
+       "fg": "#7e798e",
+       "bg": "#1b1b24"
+      },
+      {
+       "text": "Selection",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#80798d",
+       "bg": "#1a1b23"
+      },
+      {
+       "text": "Cuts snap to nearby keyframes.",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#8e7f9d",
+       "bg": "#292233"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": 6,
+     "height": 37,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Open file ＋",
+      "Open a video",
+      "Add segment N",
+      "Export video"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 1,
+     "gradientSamples": [
+      "div.filmstrip.filmstrip-empty → repeating-linear-gradient(110deg, rgb(33, 33, 42), rgb(33, 33, 42) 5px, rgb(35, 35, 45) 5px, rgb(35, 35, 45) 6"
+     ],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "header.app-header 1440px",
+      "div.transport 1062px",
+      "div.timeline-toolbar 1060px",
+      "div.mark-bar 1060px",
+      "div.panel-tabs 304px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 2,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 7,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": false,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "dm sans",
+     "ibm plex mono"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.8,
+    0.83
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1346,
+     "screens": 1.3,
+     "words": 197,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 38,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "chars": 20,
+     "lines": 1,
+     "size": 29,
+     "vw": 3.8,
+     "font": "DM Sans",
+     "weight": 550,
+     "tracking": -0.034,
+     "leading": 1.2,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.33,
+     "top": 225,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "lines": 1,
+     "size": 29,
+     "font": "DM Sans"
+    },
+    "headings": [
+     {
+      "text": "clip it browser edition",
+      "words": 4,
+      "chars": 23,
+      "lines": 1,
+      "size": 28,
+      "vw": 3.6,
+      "font": "DM Sans",
+      "weight": 700,
+      "tracking": -0.054,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.28,
+      "top": 15,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Just the good parts.",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 29,
+      "vw": 3.8,
+      "font": "DM Sans",
+      "weight": 550,
+      "tracking": -0.034,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.33,
+      "top": 225,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "DM Sans",
+       "share": 0.9,
+       "mono": false
+      },
+      {
+       "family": "IBM Plex Mono",
+       "share": 0.1,
+       "mono": true
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      9,
+      10,
+      11,
+      12,
+      16,
+      22,
+      28,
+      29
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "DM Sans",
+      "size": 12,
+      "leading": 1.8,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 6.5
+     },
+     "measureChars": 43,
+     "max": {
+      "size": 29,
+      "vw": 3.8,
+      "font": "DM Sans",
+      "text": "Just the good parts."
+     },
+     "monoShare": 0.1,
+     "monoProseShare": 0.1,
+     "monoFamilies": [
+      "IBM Plex Mono"
+     ],
+     "monoSamples": [
+      "00:00:00.000",
+      "/ 00:00:00.000",
+      "00:00",
+      "00:07",
+      "00:15",
+      "00:22"
+     ],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.41,
+     "smallText": 29
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#14151b",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.15,
+      "l": 0.09
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#0e0f14",
+       "top": 119,
+       "hsl": {
+        "h": 230,
+        "s": 0.18,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#1c1c25",
+       "top": 918,
+       "hsl": {
+        "h": 240,
+        "s": 0.14,
+        "l": 0.13
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#9794a8",
+       "share": 0.1
+      },
+      {
+       "color": "#847a95",
+       "share": 0.07
+      },
+      {
+       "color": "#817c91",
+       "share": 0.05
+      },
+      {
+       "color": "#8e839b",
+       "share": 0.04
+      },
+      {
+       "color": "#777182",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#282932",
+      "hsl": {
+       "h": 234,
+       "s": 0.11,
+       "l": 0.18
+      },
+      "fg": "#e8e7ef"
+     },
+     "lowContrast": [
+      {
+       "text": "Export video",
+       "ratio": 2.7,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#c3b1d5",
+       "bg": "#75638e"
+      },
+      {
+       "text": "MP4MOVMKVWEBM+ audio",
+       "ratio": 3.8,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#706d80",
+       "bg": "#0e0f14"
+      },
+      {
+       "text": "/ 00:00:00.000",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 10,
+       "fg": "#7e798e",
+       "bg": "#1b1b24"
+      },
+      {
+       "text": "Selection",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#80798d",
+       "bg": "#1a1b23"
+      },
+      {
+       "text": "Cuts snap to nearby keyframes.",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#8e7f9d",
+       "bg": "#292233"
+      },
+      {
+       "text": "Start time",
+       "ratio": 4.2,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#827a91",
+       "bg": "#1a1b23"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 2,
+     "radius": 6,
+     "height": 37,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Open file ＋",
+      "Open a video"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 1,
+     "gradientSamples": [
+      "div.filmstrip.filmstrip-empty → repeating-linear-gradient(110deg, rgb(33, 33, 42), rgb(33, 33, 42) 5px, rgb(35, 35, 45) 5px, rgb(35, 35, 45) 6"
+     ],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "header.app-header 768px",
+      "div.transport 736px",
+      "div.timeline-toolbar 734px",
+      "div.mark-bar 734px",
+      "div.panel-tabs 454px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 2,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 7,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": false,
+     "height": 67,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "dm sans",
+     "ibm plex mono"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.79,
+    0.84
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 1605,
+     "screens": 1.9,
+     "words": 183,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 38,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "chars": 20,
+     "lines": 1,
+     "size": 28,
+     "vw": 7.2,
+     "font": "DM Sans",
+     "weight": 550,
+     "tracking": -0.036,
+     "leading": 1.2,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.63,
+     "top": 204,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Just the good parts.",
+     "words": 4,
+     "lines": 1,
+     "size": 28,
+     "font": "DM Sans"
+    },
+    "headings": [
+     {
+      "text": "clip it",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 25,
+      "vw": 6.4,
+      "font": "DM Sans",
+      "weight": 700,
+      "tracking": -0.06,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.24,
+      "top": 15,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Just the good parts.",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 28,
+      "vw": 7.2,
+      "font": "DM Sans",
+      "weight": 550,
+      "tracking": -0.036,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.63,
+      "top": 204,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "DM Sans",
+       "share": 0.92,
+       "mono": false
+      },
+      {
+       "family": "IBM Plex Mono",
+       "share": 0.08,
+       "mono": true
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      16,
+      19,
+      25,
+      28
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "DM Sans",
+      "size": 12,
+      "leading": 1.8,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 6.5
+     },
+     "measureChars": 43,
+     "max": {
+      "size": 28,
+      "vw": 7.2,
+      "font": "DM Sans",
+      "text": "Just the good parts."
+     },
+     "monoShare": 0.08,
+     "monoProseShare": 0.08,
+     "monoFamilies": [
+      "IBM Plex Mono"
+     ],
+     "monoSamples": [
+      "00:00:00.000",
+      "00:00",
+      "00:07",
+      "00:15",
+      "00:22",
+      "00:30"
+     ],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.44,
+     "smallText": 25
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#14151b",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.15,
+      "l": 0.09
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#0e0f14",
+       "top": 112,
+       "hsl": {
+        "h": 230,
+        "s": 0.18,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#1a1b23",
+       "top": 547,
+       "hsl": {
+        "h": 233,
+        "s": 0.15,
+        "l": 0.12
+       }
+      },
+      {
+       "color": "#1c1c25",
+       "top": 875,
+       "hsl": {
+        "h": 240,
+        "s": 0.14,
+        "l": 0.13
+       }
+      },
+      {
+       "color": "#201d29",
+       "top": 1245,
+       "hsl": {
+        "h": 255,
+        "s": 0.17,
+        "l": 0.14
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#9794a8",
+       "share": 0.11
+      },
+      {
+       "color": "#847a95",
+       "share": 0.08
+      },
+      {
+       "color": "#817c91",
+       "share": 0.05
+      },
+      {
+       "color": "#777182",
+       "share": 0.05
+      },
+      {
+       "color": "#807b90",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#282932",
+      "hsl": {
+       "h": 234,
+       "s": 0.11,
+       "l": 0.18
+      },
+      "fg": "#e8e7ef"
+     },
+     "lowContrast": [
+      {
+       "text": "Export video",
+       "ratio": 2.7,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#c3b1d5",
+       "bg": "#75638e"
+      },
+      {
+       "text": "MP4MOVMKVWEBM+ audio",
+       "ratio": 3.8,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#706d80",
+       "bg": "#0e0f14"
+      },
+      {
+       "text": "Cuts snap to nearby keyframes.",
+       "ratio": 4.1,
+       "need": 4.5,
+       "size": 9,
+       "fg": "#8e7f9d",
+       "bg": "#292233"
+      },
+      {
+       "text": "Start time",
+       "ratio": 4.2,
+       "need": 4.5,
+       "size": 8,
+       "fg": "#827a91",
+       "bg": "#1a1b23"
+      },
+      {
+       "text": "End time",
+       "ratio": 4.2,
+       "need": 4.5,
+       "size": 8,
+       "fg": "#827a91",
+       "bg": "#1a1b23"
+      },
+      {
+       "text": "Mark a start and end to keep a moment.Ad",
+       "ratio": 4.2,
+       "need": 4.5,
+       "size": 10,
+       "fg": "#847a95",
+       "bg": "#1c1c25"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 2,
+     "radius": 6,
+     "height": 33,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Open file ＋",
+      "Open a video"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 1,
+     "gradientSamples": [
+      "div.filmstrip.filmstrip-empty → repeating-linear-gradient(110deg, rgb(33, 33, 42), rgb(33, 33, 42) 5px, rgb(35, 35, 45) 5px, rgb(35, 35, 45) 6"
+     ],
+     "gradientText": 0,
+     "hairlines": 8,
+     "hairlineSamples": [
+      "header.app-header 390px",
+      "div.transport 370px",
+      "div.timeline-toolbar 368px",
+      "div.mark-bar 368px",
+      "div.panel-tabs 368px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 2,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 7,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": false,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "dm sans",
+     "ibm plex mono"
+    ]
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "mono",
+   "width": 1440,
+   "message": "Monospace type outside code: IBM Plex Mono — e.g. \"00:00:00.000\", \"/ 00:00:00.000\", \"00:00\", \"00:07\"",
+   "fix": "Set it in the text face. Monospace is for literal code inside <pre>/<code> only.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 1440,
+   "message": "1 gradient fill(s): div.filmstrip.filmstrip-empty → repeating-linear-gradient(110deg, rgb(33, 33, 42), rgb(33, 33, 42) 5px, rgb(35, 35, 45) 5px, rgb(35, 35, 45) 6",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "8 thin rule(s)/divider line(s): header.app-header 1440px | div.transport 1062px | div.timeline-toolbar 1060px | div.mark-bar 1060px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "3 boxes drawn with a 1px outline.",
+   "fix": "Define a surface by its fill (one tone step from the page) or leave the content unboxed.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "dashed",
+   "width": 1440,
+   "message": "2 dashed/dotted border(s).",
+   "fix": "Remove unless it is a real drop zone.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "contrast",
+   "width": 1440,
+   "message": "Low-contrast text: \"Export video\" 2.7:1 needs 4.5:1; \"ClipIt v0.1\" 3.2:1 needs 4.5:1; \"MP4MOVMKVWEBM+ audio\" 3.8:1 needs 4.5:1; \"/ 00:00:00.000\" 4.1:1 needs 4.5:1",
+   "fix": "Darken or lighten the text colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "body-size",
+   "width": 1440,
+   "message": "Body text is 12px (the size most of the running text is set in).",
+   "fix": "Body copy 16–20px. Map small sizes from blueprints onto your body step.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "grey-body",
+   "width": 1440,
+   "message": "The running text is a soft grey on its ground (6.5:1).",
+   "fix": "Set body copy in the full ink (7:1 or more). Keep the muted ink for secondary notes; pages read thin and unfinished when everything is grey.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 0 picture(s) on the page (0 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "31 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "focal-point",
+   "width": 1440,
+   "message": "The first screen has no dominant element: the largest type is 29px (2vw) and no single picture holds a third of the viewport.",
+   "fix": "Make one thing lead: the headline at display size, or one large picture. A grid of many small pictures is not one thing; in blind tests jurors marked a first screen without a headline down every time. On the strongest studied sites the largest type has a median of 8.4vw.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 0 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/desktop-fold.jpg",
+   "pages": [
+    "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/desktop-page-01.jpg"
+   ]
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/tablet-fold.jpg",
+   "pages": [
+    "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/tablet-page-01.jpg"
+   ]
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/mobile-fold.jpg",
+   "pages": [
+    "/home/abdullah/Projects/ClipIt/.taste-skill/inspect/mobile-page-01.jpg"
+   ]
+  }
+ ]
+}
