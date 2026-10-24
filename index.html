@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="theme-color" content="#0a0d14" />
     <meta
       name="description"
@@ -10,6 +10,7 @@
     />
     <title>ClipIt — Lossless video editor</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="%VITE_FFMPEG_WASM_URL%" as="fetch" crossorigin="anonymous" />
   </head>
   <body>
     <div id="root"></div>

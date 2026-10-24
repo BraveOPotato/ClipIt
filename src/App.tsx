@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type CSSProperties,
@@ -38,6 +39,7 @@ import {
   Undo2,
   Volume2,
   VolumeX,
+  Share2,
   X,
 } from "lucide-react";
 import {
@@ -97,30 +99,36 @@ function Modal({
   title,
   onClose,
   children,
+  closeOnBackdrop = true,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  closeOnBackdrop?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   useEffect(() => {
     ref.current?.showModal();
   }, []);
   return (
     <dialog
       ref={ref}
+      aria-labelledby={titleId}
       onClose={onClose}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        const rect = e.currentTarget.getBoundingClientRect();
+        if (closeOnBackdrop && e.target === e.currentTarget &&
+          (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom)) onClose();
       }}
     >
       <div className="dialog-head">
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <IconButton label="Close dialog" onClick={onClose}>
           <X size={18} />
         </IconButton>
       </div>
-      {children}
+      <div className="dialog-body">{children}</div>
     </dialog>
   );
 }
@@ -160,12 +168,18 @@ function TimeField({
         aria-invalid={invalid}
         disabled={disabled}
         value={text}
+        inputMode="decimal"
+        enterKeyHint="done"
+        autoComplete="off"
+        spellCheck={false}
         onChange={(e) => setText(e.target.value)}
+        onFocus={(e) => e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)}
         onBlur={submit}
         onKeyDown={(e) => {
           if (e.key === "Enter") e.currentTarget.blur();
         }}
       />
+      {invalid && <small className="field-error" role="alert">Use seconds or hh:mm:ss.sss.</small>}
     </label>
   );
 }
@@ -178,6 +192,7 @@ function useThumbnails(url: string, duration: number) {
     let cancelled = false;
     const video = document.createElement("video");
     video.muted = true;
+    video.playsInline = true;
     video.preload = "auto";
     const canvas = document.createElement("canvas");
     canvas.width = 160;
@@ -235,6 +250,7 @@ export default function App() {
   const [muted, setMuted] = useState(false);
   const [rate, setRate] = useState(1);
   const [zoom, setZoom] = useState(1);
+  const [timelinePosition, setTimelinePosition] = useState(0);
   const [busy, setBusy] = useState("");
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -247,6 +263,7 @@ export default function App() {
   const [merge, setMerge] = useState(false);
   const [tracks, setTracks] = useState<number[]>([]);
   const [outputs, setOutputs] = useState<ExportedClip[]>([]);
+  const [shareError, setShareError] = useState("");
   const [drag, setDrag] = useState<{
     id: string;
     edge: "start" | "end";
@@ -257,6 +274,7 @@ export default function App() {
   const projectInput = useRef<HTMLInputElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const timeline = useRef<HTMLDivElement>(null);
+  const timelineScroller = useRef<HTMLDivElement>(null);
   const operation = useRef(0);
   const outputRef = useRef(outputs);
   outputRef.current = outputs;
@@ -265,6 +283,10 @@ export default function App() {
   const enabled = edit.segments.filter((s) => s.enabled);
   const total = enabled.reduce((sum, s) => sum + s.end - s.start, 0);
   const ready = !!media && !busy;
+
+  useEffect(() => {
+    if (video.current) video.current.playbackRate = rate;
+  }, [rate, url]);
 
   useEffect(
     () => () => {
@@ -340,6 +362,26 @@ export default function App() {
         );
     else video.current.pause();
   }
+  async function fullscreen() {
+    const element = video.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    if (!element) return;
+    try {
+      if (element.requestFullscreen) await element.requestFullscreen();
+      else if (element.webkitEnterFullscreen) element.webkitEnterFullscreen();
+      else throw new Error("Fullscreen is unavailable.");
+    } catch {
+      setError("Fullscreen is unavailable in this browser. You can still use the inline preview.");
+    }
+  }
+  async function shareOutput(output: ExportedClip) {
+    setShareError("");
+    try {
+      await navigator.share({ files: [output.file] });
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError"))
+        setShareError("Could not share this file. Use its download link instead.");
+    }
+  }
   function mark(edge: "start" | "end", value = time) {
     if (!selected) return;
     if (
@@ -380,7 +422,9 @@ export default function App() {
     const anchor = document.createElement("a");
     anchor.href = href;
     anchor.download = name;
+    document.body.appendChild(anchor);
     anchor.click();
+    anchor.remove();
     setTimeout(() => URL.revokeObjectURL(href), 60000);
   }
   async function openFile(next: File) {
@@ -487,6 +531,7 @@ export default function App() {
       }
       outputs.forEach((o) => URL.revokeObjectURL(o.url));
       setOutputs(result);
+      setShareError("");
       setModal("exports");
     } catch (e) {
       if (operation.current === token)
@@ -636,6 +681,7 @@ export default function App() {
         ref={fileInput}
         className="visually-hidden"
         type="file"
+        aria-label="Open media file"
         accept="video/*,audio/*,.mkv,.avi,.mts,.m2ts,.ts,.mov,.flac,.llc"
         onChange={(e) => {
           if (e.target.files?.[0]) void openFile(e.target.files[0]);
@@ -646,7 +692,7 @@ export default function App() {
         ref={projectInput}
         className="visually-hidden"
         type="file"
-        accept=".llc,.json"
+        aria-label="Load project file"
         onChange={(e) => {
           if (e.target.files?.[0]) void importProject(e.target.files[0]);
           e.target.value = "";
@@ -689,7 +735,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="workspace">
+      <main className="workspace" aria-busy={!!busy}>
         <section className="editor-pane" aria-label="Video editor">
           <div className="source-bar">
             <div className="source-title">
@@ -777,21 +823,6 @@ export default function App() {
                 </button>
               </div>
             )}
-            {busy && (
-              <div className="processing">
-                <LoaderCircle className="spin" size={24} />
-                <strong>{busy}</strong>
-                <span>
-                  {progress === null
-                    ? "Processing locally on your device"
-                    : `${Math.round(progress * 100)}% complete`}
-                </span>
-                <progress max={1} value={progress ?? undefined} />
-                <button className="text-button" onClick={cancel}>
-                  Cancel
-                </button>
-              </div>
-            )}
           </div>
 
           <div className="transport">
@@ -807,11 +838,7 @@ export default function App() {
                 aria-label="Playback speed"
                 disabled={!ready}
                 value={rate}
-                onChange={(e) => {
-                  const n = Number(e.target.value);
-                  setRate(n);
-                  if (video.current) video.current.playbackRate = n;
-                }}
+                onChange={(e) => setRate(Number(e.target.value))}
               >
                 {[0.25, 0.5, 1, 1.5, 2].map((n) => (
                   <option key={n} value={n}>
@@ -870,13 +897,7 @@ export default function App() {
               <IconButton
                 label="Fullscreen preview"
                 disabled={!ready || !media?.width}
-                onClick={() => {
-                  void video.current
-                    ?.requestFullscreen()
-                    .catch(() =>
-                      setError("Fullscreen is unavailable in this browser."),
-                    );
-                }}
+                onClick={() => void fullscreen()}
               >
                 <Maximize size={16} />
               </IconButton>
@@ -947,7 +968,11 @@ export default function App() {
                 </IconButton>
               </div>
             </div>
-            <div className="timeline-scroll">
+            <div className="timeline-scroll" ref={timelineScroller}
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                setTimelinePosition(el.scrollLeft / (el.scrollWidth - el.clientWidth || 1) * 100);
+              }}>
               <div
                 className="timeline-content"
                 ref={timeline}
@@ -1095,6 +1120,17 @@ export default function App() {
                 )}
               </div>
             </div>
+            {zoom > 1 && (
+              <label className="timeline-navigation">
+                <span>Pan zoomed timeline</span>
+                <input type="range" min={0} max={100} step="any" value={timelinePosition}
+                  aria-label="Pan zoomed timeline" disabled={!ready}
+                  onChange={(e) => {
+                    const el = timelineScroller.current;
+                    if (el) el.scrollLeft = Number(e.target.value) / 100 * (el.scrollWidth - el.clientWidth);
+                  }} />
+              </label>
+            )}
             <div className="mark-bar">
               <div className="mark-fields">
                 <button
@@ -1204,6 +1240,10 @@ export default function App() {
                             placeholder={`Segment ${i + 1}`}
                             key={`${s.id}-${s.name}`}
                             defaultValue={s.name}
+                            enterKeyHint="done"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") e.currentTarget.blur();
+                            }}
                             onFocus={() => select(s.id)}
                             onBlur={(e) => {
                               if (e.target.value !== s.name)
@@ -1349,6 +1389,7 @@ export default function App() {
                 <span>Container</span>
                 <div className="select-wrap">
                   <select
+                    aria-label="Output container"
                     value={extension}
                     disabled={!ready}
                     onChange={(e) => setExtension(e.target.value)}
@@ -1439,6 +1480,18 @@ export default function App() {
         </div>
         <button onClick={() => setModal("about")}>About ClipIt</button>
       </footer>
+      {busy && (
+        <Modal title={busy} onClose={cancel} closeOnBackdrop={false}>
+          <div className="processing">
+            <LoaderCircle className="spin" size={24} />
+            <span role="status">
+              {progress === null ? "Processing locally on your device" : `${Math.round(progress * 100)}% complete`}
+            </span>
+            <progress aria-label="Processing progress" max={1} value={progress ?? undefined} />
+            <button className="button secondary" onClick={cancel}>Cancel</button>
+          </div>
+        </Modal>
+      )}
       {dragOver && (
         <div className="drop-overlay">
           <FolderOpen size={42} />
@@ -1467,6 +1520,12 @@ export default function App() {
           <p className="dialog-note">
             Shortcuts are active while the editor is focused, outside text
             fields.
+          </p>
+          <p className="dialog-note">
+            On touchscreens, use the playback and editing buttons. Drag the ruler
+            or images to seek, drag a selected segment’s edges to trim, and use
+            “Pan zoomed timeline” to move around when zoomed in. Time fields also
+            accept seconds for precise edits without dragging.
           </p>
         </Modal>
       )}
@@ -1524,18 +1583,26 @@ export default function App() {
           </p>
           <div className="download-list">
             {outputs.map((o) => (
-              <a key={o.url} href={o.url} download={o.name}>
-                <span className="download-icon">
-                  <FileVideo2 size={20} />
-                </span>
-                <span>
-                  <strong>{o.name}</strong>
-                  <small>{fileSize(o.size)}</small>
-                </span>
-                <Download size={18} />
-              </a>
+              <div className="download-item" key={o.url}>
+                <a href={o.url} download={o.name}>
+                  <span className="download-icon">
+                    <FileVideo2 size={20} />
+                  </span>
+                  <span>
+                    <strong>{o.name}</strong>
+                    <small>{fileSize(o.size)}</small>
+                  </span>
+                  <Download size={18} />
+                </a>
+                {navigator.canShare?.({ files: [o.file] }) && (
+                  <button className="button secondary" aria-label={`Share ${o.name}`} onClick={() => void shareOutput(o)}>
+                    <Share2 size={18} /> Share / save
+                  </button>
+                )}
+              </div>
             ))}
           </div>
+          {shareError && <p className="field-error" role="alert">{shareError}</p>}
           <p className="dialog-note">
             Keyframe-aligned cuts may include a little extra footage. Downloads
             remain available until you open another file or close this tab.

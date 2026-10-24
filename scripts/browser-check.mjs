@@ -15,6 +15,21 @@ const page = await browser.newPage({
 });
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
+const wasmRequests = [];
+page.on("request", (request) => {
+  if (new URL(request.url()).pathname.endsWith(".wasm")) wasmRequests.push(request.url());
+});
+// Exercise cross-origin loading before the versioned binary has been pushed to GitHub.
+const wasmFixture = {
+  path: "wasm/ffmpeg-core-0.12.10.wasm",
+  contentType: "application/octet-stream",
+  headers: { "access-control-allow-origin": "*", "cache-control": "public, max-age=300" },
+};
+if (process.env.WASM_FIXTURE === "1") {
+  await page.route("https://raw.githubusercontent.com/BraveOPotato/ClipIt/main/wasm/ffmpeg-core-0.12.10.wasm", (route) =>
+    route.fulfill(wasmFixture),
+  );
+}
 await mkdir("test-results", { recursive: true });
 
 function probe(path) {
@@ -100,6 +115,9 @@ async function collectDownloads(prefix, count) {
 try {
   await page.goto(process.env.BASE_URL || "http://localhost:5173");
   await page.getByRole("heading", { name: "Keep the good parts." }).waitFor();
+  const wasmURL = await page.locator('link[rel="preload"][as="fetch"]').getAttribute("href");
+  assert.ok(wasmURL?.startsWith("https://raw.githubusercontent.com/BraveOPotato/ClipIt/"));
+  assert.deepEqual(wasmRequests, [wasmURL], "WASM starts downloading without opening media");
   await page.screenshot({
     path: "test-results/desktop-empty.png",
     fullPage: true,
@@ -108,6 +126,7 @@ try {
     .getByRole("button", { name: "Try the sample" })
     .click();
   await ready();
+  assert.deepEqual(wasmRequests, [wasmURL], "The worker reuses the preloaded WASM download");
   await page.waitForFunction(
     () => document.querySelector("video")?.readyState >= 2,
   );
@@ -238,7 +257,7 @@ try {
     .click();
   assert.equal(await page.locator(".segment-card").count(), 1);
   await page
-    .locator('input[accept=".llc,.json"]')
+    .getByLabel("Load project file", { exact: true })
     .setInputFiles("test-results/project.llc");
   await page.waitForFunction(
     () => document.querySelectorAll(".segment-card").length === 2,
@@ -339,7 +358,7 @@ try {
   const retry = await browser.newPage();
   await retry.route("**/*.wasm*", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 800));
-    await route.continue().catch(() => {});
+    await (process.env.WASM_FIXTURE === "1" ? route.fulfill(wasmFixture) : route.continue()).catch(() => {});
   });
   await retry.goto(process.env.BASE_URL || "http://localhost:5173");
   await retry
@@ -357,9 +376,243 @@ try {
     { timeout: 60000 },
   );
   await retry.close();
+  // A failed background fetch must not prevent rendering or poison the retry.
+  const recovery = await browser.newPage();
+  recovery.on("pageerror", (error) => errors.push(error.message));
+  let attempts = 0;
+  await recovery.route("**/*.wasm*", (route) => {
+    attempts++;
+    if (attempts === 1) return route.fulfill({ status: 503, headers: { "access-control-allow-origin": "*" } });
+    return process.env.WASM_FIXTURE === "1" ? route.fulfill(wasmFixture) : route.continue();
+  });
+  await recovery.goto(process.env.BASE_URL || "http://localhost:5173");
+  await recovery.getByRole("heading", { name: "Keep the good parts." }).waitFor();
+  await recovery.getByRole("button", { name: "Try the sample" }).click();
+  await recovery.waitForFunction(() => !document.querySelector(".processing") && !!document.querySelector("video"), undefined, { timeout: 60000 });
+  assert.equal(attempts, 2, "Opening media retries a failed background WASM download");
+  await recovery.close();
+
+  // Phone: every feature through touch alone, at the smallest common width.
+  const phone = await browser.newContext({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true, acceptDownloads: true });
+  const m = await phone.newPage();
+  m.on("pageerror", (e) => errors.push(e.message));
+  await m.route("**/*.wasm*", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await (process.env.WASM_FIXTURE === "1" ? route.fulfill(wasmFixture) : route.continue()).catch(() => {});
+  });
+  await m.addInitScript(() => {
+    // Headless Chromium has no share sheet or iOS video fullscreen; record the calls.
+    window.shared = [];
+    navigator.canShare = () => true;
+    navigator.share = async ({ files }) => { window.shared.push(files[0].name); };
+    HTMLVideoElement.prototype.requestFullscreen = undefined;
+    HTMLVideoElement.prototype.webkitEnterFullscreen = function () { window.fullscreen = true; };
+  });
+  await m.goto(process.env.BASE_URL || "http://localhost:5173");
+  const tap = (name) => m.getByRole("button", { name, exact: true }).first().tap();
+  const now = async () => Number(await m.getByRole("slider", { name: "Playhead position" }).getAttribute("aria-valuenow"));
+  // Time fields render from an effect, so wait for the committed value.
+  const waitTime = (label, seconds, tolerance = 0.1) => m.waitForFunction(([label, seconds, tolerance]) => {
+    const value = document.querySelector(`input[aria-label="${label}"]`).value;
+    return Math.abs(value.split(":").reduce((total, part) => total * 60 + Number(part), 0) - seconds) < tolerance;
+  }, [label, seconds, tolerance], { timeout: 5000 });
+  const mField = (label) => m.getByRole("textbox", { name: label, exact: true });
+  const cards = () => m.locator(".segment-card").count();
+  async function pick(button, path) {
+    const chooser = m.waitForEvent("filechooser");
+    await tap(button);
+    await (await chooser).setFiles(path);
+  }
+  async function mobileReady() {
+    await m.waitForFunction(() => !document.querySelector("dialog .processing") && document.querySelector("video")?.readyState >= 2, undefined, { timeout: 60000 });
+  }
+  async function retap(input) {
+    await input.tap();
+    await m.getByRole("heading", { name: "Timeline" }).tap(); // Tapping away commits, as on iOS.
+  }
+
+  // Processing feedback and Cancel stay on screen, even after scrolling.
+  await pick("Open file", "public/sample.mp4");
+  await m.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const cancelBox = await m.getByRole("button", { name: "Cancel", exact: true }).boundingBox();
+  assert.ok(cancelBox.y >= 0 && cancelBox.y + cancelBox.height <= 568, "Cancel is visible while processing");
+  await m.touchscreen.tap(4, 4);
+  assert.ok(await m.getByRole("button", { name: "Cancel", exact: true }).isVisible(), "A stray backdrop tap does not cancel processing");
+  await tap("Cancel");
+  await pick("Open file", "public/sample.mp4");
+  await mobileReady();
+
+  await tap("Mute preview");
+  assert.equal(await m.locator("video").evaluate((v) => v.muted), true);
+  await m.getByRole("combobox", { name: "Playback speed" }).selectOption("2");
+  await tap("Play");
+  await m.waitForFunction(() => !document.querySelector("video").paused);
+  assert.equal(await m.locator("video").evaluate((v) => v.playbackRate), 2);
+  await tap("Pause");
+  await tap("Go to end");
+  assert.equal(await now(), 12);
+  await tap("Go to start");
+  await tap("Forward one frame");
+  assert.ok(Math.abs((await now()) - 1 / 24) < 0.001);
+  await tap("Back one frame");
+  assert.equal(await now(), 0);
+  await tap("Fullscreen preview");
+  assert.equal(await m.evaluate(() => window.fullscreen), true, "iPhone fullscreen uses webkitEnterFullscreen");
+
+  const mRuler = m.getByRole("slider", { name: "Playhead position" });
+  async function tapTimeline(fraction) {
+    const box = await mRuler.boundingBox();
+    await mRuler.tap({ position: { x: box.width * fraction, y: 22 } });
+  }
+  await tapTimeline(0.25);
+  assert.ok(Math.abs((await now()) - 3) < 0.1);
+  await m.getByRole("button", { name: /Mark in/ }).tap();
+  await tapTimeline(0.75);
+  await m.getByRole("button", { name: /Mark out/ }).tap();
+  await waitTime("Start time", 3);
+  await waitTime("End time", 9);
+
+  const startField = mField("Start time");
+  assert.equal(await startField.getAttribute("inputmode"), "decimal");
+  await startField.tap();
+  assert.equal(await startField.evaluate((e) => e.selectionEnd - e.selectionStart), 12, "Tapping a time selects it for replacement");
+  await m.keyboard.type("abc");
+  await m.getByRole("heading", { name: "Timeline" }).tap();
+  await m.getByText("Use seconds or hh:mm:ss.sss.").waitFor();
+  await startField.tap();
+  await m.keyboard.type("2,5");
+  await m.getByRole("heading", { name: "Timeline" }).tap();
+  await waitTime("Start time", 2.5, 0.001);
+  await startField.tap();
+  await m.keyboard.type("11");
+  await m.getByRole("heading", { name: "Timeline" }).tap();
+  await m.getByRole("alert").filter({ hasText: "start must be before the end" }).waitFor();
+  await tap("Dismiss error");
+
+  await tapTimeline(0.5);
+  await tap("Split");
+  assert.equal(await cards(), 2);
+  await tap("Undo (Ctrl+Z)");
+  assert.equal(await cards(), 1);
+  await tap("Redo (Ctrl+Shift+Z)");
+  assert.equal(await cards(), 2);
+  const segmentName = m.getByRole("textbox", { name: "Segment 1 name" });
+  await segmentName.tap();
+  await segmentName.fill("Phone cut");
+  await m.keyboard.press("Enter");
+  assert.equal(await segmentName.inputValue(), "Phone cut");
+  const include = m.getByRole("checkbox", { name: "Include segment 2 in export" });
+  await include.tap();
+  await m.getByText("1 segment selected").waitFor();
+  await include.tap();
+  await m.getByText("2 segments selected").waitFor();
+  await tap("Select segment 2");
+  assert.ok(Math.abs((await now()) - 6) < 0.1);
+
+  // Selected segments expose 44px trim handles that follow a finger.
+  const endHandle = m.getByRole("button", { name: "Drag segment 2 end", exact: true });
+  await endHandle.scrollIntoViewIfNeeded();
+  const lane = await m.locator(".timeline-content").boundingBox();
+  const handleBox = await endHandle.boundingBox();
+  assert.ok(handleBox.width >= 44 && handleBox.height >= 44);
+  const fingerY = handleBox.y + handleBox.height / 2;
+  const touchCDP = await phone.newCDPSession(m);
+  await touchCDP.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: handleBox.x + handleBox.width / 2, y: fingerY }] });
+  const fromX = handleBox.x + handleBox.width / 2;
+  const toX = lane.x + lane.width * 0.9;
+  for (let step = 1; step <= 10; step++) {
+    await touchCDP.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: fromX + ((toX - fromX) * step) / 10, y: fingerY }] });
+    await m.waitForTimeout(16);
+  }
+  await m.waitForTimeout(100); // Finger rests before lifting, like a deliberate trim.
+  await touchCDP.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await touchCDP.detach();
+  await waitTime("End time", 10.8, 0.15); // Touch trim moves the segment end.
+
+  await tap("Zoom in");
+  await tap("Zoom in");
+  await m.getByRole("slider", { name: "Pan zoomed timeline" }).fill("100");
+  assert.ok(await m.locator(".timeline-scroll").evaluate((e) => e.scrollLeft > 0 && Math.abs(e.scrollLeft + e.clientWidth - e.scrollWidth) < 2), "Pan control reaches the end of a zoomed timeline");
+  await m.locator(".timeline-scroll").evaluate((e) => { e.scrollLeft = 0; });
+  await m.waitForFunction(() => Number(document.querySelector('input[aria-label="Pan zoomed timeline"]').value) === 0);
+  await tap("Zoom out");
+  await tap("Zoom out");
+
+  await tap("Tracks");
+  const audioTrack = m.locator(".track-row", { hasText: "audio" });
+  await audioTrack.tap();
+  assert.equal(await audioTrack.locator("input").isChecked(), false);
+  await audioTrack.tap();
+  assert.equal(await audioTrack.locator("input").isChecked(), true);
+  await m.getByRole("button", { name: /^Segments/ }).tap();
+  await tap("Add segment (N)");
+  assert.equal(await cards(), 3);
+  await tap("Delete segment 3");
+  assert.equal(await cards(), 2);
+  await tap("Invert");
+  await tap("Undo (Ctrl+Z)");
+  assert.equal(await cards(), 2);
+
+  const savedProject = m.waitForEvent("download");
+  await tap("Save project");
+  await (await savedProject).saveAs("test-results/phone-project.llc");
+  await tap("Delete segment 2");
+  assert.equal(await cards(), 1);
+  await pick("Load project", "test-results/phone-project.llc");
+  await m.waitForFunction(() => document.querySelectorAll(".segment-card").length === 2);
+  assert.equal(await m.getByRole("textbox", { name: "Segment 1 name" }).inputValue(), "Phone cut");
+
+  await m.locator(".export-options summary").tap();
+  await m.getByRole("combobox", { name: "Output container" }).selectOption("original");
+  const mergeSwitch = m.getByRole("checkbox", { name: "Merge selected segments" });
+  await mergeSwitch.tap();
+  assert.equal(await mergeSwitch.isChecked(), true);
+  await mergeSwitch.tap();
+  assert.equal(await mergeSwitch.isChecked(), false);
+  await m.getByRole("button", { name: "Export 2 segments" }).tap();
+  await m.getByRole("heading", { name: "Your cuts are ready." }).waitFor({ timeout: 60000 });
+  const phoneDownload = m.waitForEvent("download");
+  await m.locator(".download-list a").first().tap();
+  await (await phoneDownload).saveAs("test-results/phone-0.mp4");
+  assert.ok(probe("test-results/phone-0.mp4").packets.every((p) => sourcePackets.has(p.data_hash)));
+  await m.getByRole("button", { name: /^Share / }).nth(1).tap();
+  await m.waitForFunction(() => window.shared.length === 1);
+  await tap("Close dialog");
+
+  await tap("All shortcuts");
+  const dialogBox = await m.locator("dialog").boundingBox();
+  assert.ok(dialogBox.y >= 0 && dialogBox.y + dialogBox.height <= 568, "Dialogs fit the phone screen");
+  assert.ok(await m.locator("dialog .dialog-body").evaluate((e) => e.scrollHeight > e.clientHeight), "Long dialogs scroll inside");
+  await m.getByText("On touchscreens").scrollIntoViewIfNeeded();
+  await tap("Close dialog");
+  await tap("About ClipIt");
+  await m.getByRole("heading", { name: "Meet ClipIt." }).waitFor();
+  await tap("Close dialog");
+
+  // Measure before any full-page screenshot: Playwright's capture drops touch emulation.
+  for (const [width, height] of [[320, 568], [390, 844], [932, 430]]) {
+    await m.setViewportSize({ width, height });
+    const layout = await m.evaluate(() => {
+      const target = (e) => (e.matches("input[type=checkbox]") && e.closest("label")) || e;
+      const small = [...document.querySelectorAll("button, input, select, summary, a, [role=slider]")]
+        .filter((e) => e.getClientRects().length && getComputedStyle(e).visibility !== "hidden" && !e.matches(".visually-hidden"))
+        .map((e) => [e, target(e).getBoundingClientRect()])
+        .filter(([, r]) => r.width < 44 || r.height < 44)
+        .map(([e]) => e.getAttribute("aria-label") || e.textContent.trim());
+      const viewer = document.querySelector(".viewer").getBoundingClientRect();
+      const transport = document.querySelector(".transport").getBoundingClientRect();
+      return { overflow: document.documentElement.scrollWidth > innerWidth, small, playerHeight: transport.bottom - viewer.top };
+    });
+    assert.equal(layout.overflow, false, `${width}px phone layout must not overflow`);
+    assert.deepEqual(layout.small, [], `${width}px touch targets are at least 44px`);
+    assert.ok(layout.playerHeight <= height, `${width}x${height}: preview and controls fit on one screen`);
+  }
+  await m.setViewportSize({ width: 320, height: 568 });
+  await m.screenshot({ path: "test-results/phone-editor.png", fullPage: true });
+  await phone.close();
   assert.deepEqual(errors, [], "No uncaught browser errors");
   console.log(
-    "PASS: pointer scrubbing, trim drags, text-selection protection, file-only drag overlay, real file drop, keyboard seeking, real WASM import, segment edits, undo/redo, project round-trip, individual + merged downloads, packet-identical stream copy, decode validation, failure recovery, cancellation/retry, and responsive layout.",
+    "PASS: pointer scrubbing, trim drags, text-selection protection, file-only drag overlay, real file drop, keyboard seeking, real WASM import, segment edits, undo/redo, project round-trip, individual + merged downloads, packet-identical stream copy, decode validation, failure recovery, cancellation/retry, responsive layout, and every feature by touch on a 320px phone plus landscape.",
   );
 } finally {
   await browser.close();

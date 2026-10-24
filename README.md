@@ -16,7 +16,13 @@ npm run build    # static application in dist/
 npm run preview  # preview the production build on port 4173
 ```
 
-All media processing takes place in a browser worker. No media is uploaded. The FFmpeg core, fonts, and sample are served from the app's own origin. There is no backend, account system, CDN runtime dependency, or analytics.
+All media processing takes place in a browser worker. No media is uploaded. The FFmpeg JavaScript core, fonts, and sample are served from the app's own origin; the WASM binary downloads from this repository on GitHub. There is no backend, account system, or analytics.
+
+### Cloudflare Pages
+
+Use build command `npm run build` and output directory `dist`. The 31 MiB WASM binary lives at `wasm/ffmpeg-core-0.12.10.wasm`, outside `public/`, so Vite does not include it in `dist/` or Cloudflare's 25 MiB per-file limit.
+
+Push the `wasm/` directory to the public GitHub repository before deploying. `.env` sets `VITE_FFMPEG_WASM_URL` to its raw GitHub URL (not a GitHub HTML file page). HTML preloads it while the page loads, before React renders or a file is opened. The app consumes that preload before rendering and shares the downloaded binary with the FFmpeg worker through a blob URL, avoiding another GitHub download even after cancellation. The blob is retained for the page's lifetime. An initial download failure does not block rendering, and opening media can retry it. GitHub sees the binary request, never your media. To change the host, override `VITE_FFMPEG_WASM_URL` at build time; it must serve the matching 0.12.10 binary with CORS allowing your app's origin.
 
 ## Implemented
 
@@ -31,6 +37,10 @@ All media processing takes place in a browser worker. No media is uploaded. The 
 - Responsive workspace, keyboard controls, accessible dialogs, and reduced-motion support.
 
 Drag the playhead, ruler, or filmstrip to scrub; drag a segment's edges to trim. These pointer gestures work with mouse or touch without selecting timeline text. Only external file drags activate the media-drop overlay. The focused playhead/ruler also accepts arrow keys, Shift+arrows, Home, and End. Container and merge controls are under **Export options**.
+
+### Phones and tablets
+
+Every feature works with touch alone; keyboard shortcuts are optional. Touch screens get 44px controls, wider trim handles on the selected segment (tap a segment to select it), a **Pan zoomed timeline** slider, and processing progress/Cancel in a dialog that stays on screen. Time fields open a decimal keypad, select their value on tap, and accept plain seconds with `.` or `,` (for example `65,5`). Phone landscape keeps the preview and playback controls on one screen. Fullscreen uses iPhone's native video player. Where the browser supports file sharing, exports also offer **Share / save** (for example, Save Video to Photos). The project picker accepts any file because iOS greys out unknown extensions such as `.llc`. The contents are still validated. The iOS photo picker may supply a compatibility-converted copy of a video; to cut the untouched original, choose it from the Files app.
 
 ## Lossless behavior and limits
 
@@ -53,9 +63,11 @@ npm run build
 npm run test:browser
 # Or against the production preview:
 BASE_URL=http://localhost:4173 npm run test:browser
+# Before pushing the binary, intercept its GitHub URL with the local fixture:
+WASM_FIXTURE=1 BASE_URL=http://localhost:4173 npm run test:browser
 ```
 
-Set `CHROMIUM=/path/to/chromium` if needed. The browser check exercises mouse/touch scrubbing, cancellation, zoomed/scrolled seeking, trim handles, file-only drag-and-drop, the real WASM worker, editing, undo/redo, project round-trip, separate and merged exports, failed-export recovery, cancellation/retry, and responsive layout. It downloads the actual files, independently decodes them, and compares **every compressed audio/video packet's SHA-256 hash with the source** to prove stream copy on the test fixture. Screenshots and files go to ignored `test-results/`.
+Set `CHROMIUM=/path/to/chromium` if needed. The browser check exercises mouse/touch scrubbing, cancellation, zoomed/scrolled seeking, trim handles, file-only drag-and-drop, the real WASM worker, editing, undo/redo, project round-trip, separate and merged exports, failed-export recovery, cancellation/retry, and responsive layout. A touch-only pass on a 320px phone then uses every feature through taps, finger drags and the system file picker, and checks 44px targets, overflow and landscape fit at phone sizes. It downloads the actual files, independently decodes them, and compares **every compressed audio/video packet's SHA-256 hash with the source** to prove stream copy on the test fixture. Screenshots and files go to ignored `test-results/`.
 
 `bash scripts/make-sample.sh` regenerates the included original sample using ImageMagick and native FFmpeg.
 
@@ -63,9 +75,9 @@ Set `CHROMIUM=/path/to/chromium` if needed. The browser check exercises mouse/to
 
 GPT 6.1 Sol researched the upstream options at the user's request. See [RESEARCH.md](RESEARCH.md) for the decision and primary sources.
 
-The media pipeline in `src/media.ts` adapts **ClipForge's MIT-licensed ffmpeg.wasm pipeline**, with substantial corrections: self-hosted core assets, single-thread operation, WORKERFS input, stream inspection/selection, exit/output validation, cancellation/retry, bounded output memory, and cleanup. The UI and editor state are authored for this browser edition. No Electron or LosslessCut application source is bundled.
+The media pipeline in `src/media.ts` adapts **ClipForge's MIT-licensed ffmpeg.wasm pipeline**, with substantial corrections: pinned core assets, single-thread operation, WORKERFS input, stream inspection/selection, exit/output validation, cancellation/retry, bounded output memory, and cleanup. The UI and editor state are authored for this browser edition. No Electron or LosslessCut application source is bundled.
 
-Pinned media packages: `@ffmpeg/ffmpeg@0.12.15`, `@ffmpeg/core@0.12.10`. The single-threaded core does not require COOP/COEP or SharedArrayBuffer. Deploy `dist/` on an HTTPS static host (localhost works during development) with normal JavaScript/WASM MIME types and worker support. The core is about 32 MB before HTTP compression and loads on first file open.
+Pinned media packages: `@ffmpeg/ffmpeg@0.12.15`, `@ffmpeg/core@0.12.10`. The single-threaded core does not require COOP/COEP or SharedArrayBuffer. Deploy `dist/` on an HTTPS static host (localhost works during development) with normal JavaScript MIME types and worker support. The WASM core is about 32 MB before HTTP compression and starts downloading during page load.
 
 ## License
 

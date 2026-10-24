@@ -13,6 +13,7 @@ import {
 test("editing preserves valid ranges, overlapping inversion, and project round trips", () => {
   assert.equal(formatTime(59.9999), "00:01:00.000");
   assert.equal(parseTime("01:02:03.125"), 3723.125);
+  assert.equal(parseTime("2,5"), 2.5);
   assert.equal(parseTime("00:67:00"), null);
   assert.equal(parseTime("-2"), null);
   const first = segment(2, 8, "Keep");

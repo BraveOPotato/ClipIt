@@ -1,10 +1,9 @@
 // Adapted from ClipForge's FFmpeg pipeline (MIT, Copyright (c) 2026 Anchit).
 // https://github.com/jakharanchit/ClipForge/blob/main/src/lib/ffmpeg.ts
-// Changes: local assets, WORKERFS input, probing, explicit stream selection,
+// Changes: external WASM, WORKERFS input, probing, explicit stream selection,
 // checked exit codes, cancellation/retry, bounded output, and finally cleanup.
 import { FFmpeg, FFFSType } from "@ffmpeg/ffmpeg";
 import coreURL from "@ffmpeg/core?url";
-import wasmURL from "@ffmpeg/core/wasm?url";
 import type { Segment } from "./editor";
 
 export type MediaInfo = {
@@ -14,11 +13,27 @@ export type MediaInfo = {
   fps: number;
   streams: { index: number; type: string; codec: string; language?: string }[];
 };
-export type ExportedClip = { name: string; url: string; size: number };
+export type ExportedClip = { name: string; url: string; size: number; file: File };
 
 let instance: FFmpeg | null = null;
 let loadPromise: Promise<FFmpeg> | null = null;
 let active: symbol | null = null;
+let wasmDownload: Promise<string> | null = null;
+
+export function preloadWasm(): Promise<string> {
+  if (!wasmDownload) {
+    wasmDownload = fetch(import.meta.env.VITE_FFMPEG_WASM_URL)
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`WASM download failed: HTTP ${response.status}`);
+        return URL.createObjectURL(new Blob([await response.blob()], { type: "application/wasm" }));
+      })
+      .catch((error) => {
+        wasmDownload = null;
+        throw error;
+      });
+  }
+  return wasmDownload;
+}
 
 async function getFFmpeg(onStatus: (message: string) => void): Promise<FFmpeg> {
   if (instance?.loaded) return instance;
@@ -26,10 +41,13 @@ async function getFFmpeg(onStatus: (message: string) => void): Promise<FFmpeg> {
   const ffmpeg = new FFmpeg();
   instance = ffmpeg;
   onStatus("Loading the local editing engine");
-  loadPromise = ffmpeg
-    .load({
-      coreURL: new URL(coreURL, location.href).href,
-      wasmURL: new URL(wasmURL, location.href).href,
+  loadPromise = preloadWasm()
+    .then((wasmURL) => {
+      if (instance !== ffmpeg) throw new Error("Processing cancelled.");
+      return ffmpeg.load({
+        coreURL: new URL(coreURL, location.href).href,
+        wasmURL,
+      });
     })
     .then(() => ffmpeg)
     .catch((error) => {
@@ -223,10 +241,10 @@ export async function exportClips(
           m4a: "audio/mp4",
           wav: "audio/wav",
         };
-        const blob = new Blob([data], {
+        const blob = new File([data], name, {
           type: mime[extension] || "application/octet-stream",
         });
-        results.push({ name, url: URL.createObjectURL(blob), size: blob.size });
+        results.push({ name, url: URL.createObjectURL(blob), size: blob.size, file: blob });
         await ffmpeg.deleteFile(path);
         cleanup.delete(path);
       }

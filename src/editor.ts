@@ -22,8 +22,10 @@ export function formatTime(seconds: number, precise = true): string {
 }
 
 export function parseTime(value: string): number | null {
-  if (!/^\d+(?::[0-5]?\d){0,2}(?:\.\d{1,3})?$/.test(value.trim())) return null;
-  const parts = value.trim().split(":").map(Number);
+  // Phone decimal keypads show "," instead of "." in many locales.
+  const text = value.trim().replace(",", ".");
+  if (!/^\d+(?::[0-5]?\d){0,2}(?:\.\d{1,3})?$/.test(text)) return null;
+  const parts = text.split(":").map(Number);
   return parts.reduce((total, part) => total * 60 + part, 0);
 }
 
